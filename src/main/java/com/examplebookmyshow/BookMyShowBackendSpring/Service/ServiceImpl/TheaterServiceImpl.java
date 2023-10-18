@@ -5,27 +5,36 @@ import com.examplebookmyshow.BookMyShowBackendSpring.Convertor.TheaterConvertor;
 import com.examplebookmyshow.BookMyShowBackendSpring.Dto.EntryDto.TheaterEntryDto;
 import com.examplebookmyshow.BookMyShowBackendSpring.Dto.ResponseDto.TheaterResponseDto;
 import com.examplebookmyshow.BookMyShowBackendSpring.Enum.SeatType;
+import com.examplebookmyshow.BookMyShowBackendSpring.Enum.TheaterType;
 import com.examplebookmyshow.BookMyShowBackendSpring.Model.MovieEntity;
 import com.examplebookmyshow.BookMyShowBackendSpring.Model.TheaterEntity;
 import com.examplebookmyshow.BookMyShowBackendSpring.Model.TheaterSeatsEntity;
 import com.examplebookmyshow.BookMyShowBackendSpring.Repository.TheaterRepository;
+import com.examplebookmyshow.BookMyShowBackendSpring.Repository.TheaterSeatsRepository;
 import com.examplebookmyshow.BookMyShowBackendSpring.Service.TheaterService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+
+@Service
 public class TheaterServiceImpl implements TheaterService {
     @Autowired
     TheaterRepository theaterRepository;
+    @Autowired
+    TheaterSeatsRepository  theaterSeatsRepository;
     @Override
     public TheaterResponseDto addTheater(TheaterEntryDto theaterEntryDto) {
         TheaterEntity theaterEntity= TheaterConvertor.convertDtoToEntity(theaterEntryDto);
         List<TheaterSeatsEntity> seats=createSeats();
         theaterEntity.setSeats(seats);
+        theaterEntity.setShows(null);
         for(TheaterSeatsEntity seat :seats){
             seat.setTheater(theaterEntity);
         }
+        theaterEntity.setType(TheaterType.SINGLE);
         theaterRepository.save(theaterEntity);
         TheaterResponseDto theaterResponseDto=TheaterConvertor.convertEntityToDto(theaterEntity);
         return theaterResponseDto;
@@ -45,6 +54,7 @@ public class TheaterServiceImpl implements TheaterService {
         seats.add(getTheaterSeats("2C",200,SeatType.PREMIUM));
         seats.add(getTheaterSeats("2D",200,SeatType.PREMIUM));
         seats.add(getTheaterSeats("2E",200,SeatType.PREMIUM));
+        theaterSeatsRepository.saveAll(seats);
         return  seats;
     }
 
@@ -54,6 +64,8 @@ public class TheaterServiceImpl implements TheaterService {
 
     @Override
     public TheaterResponseDto getTheater(int id) {
-        return null;
+        TheaterEntity theater=theaterRepository.findById(id).get();
+        return TheaterConvertor.convertEntityToDto(theater);
+
     }
 }

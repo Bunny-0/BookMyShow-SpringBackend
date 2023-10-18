@@ -28,8 +28,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDto getUser(UserResponseDto userResponseDto) {
-        UserEntity userEntity= userRespository.findById(userResponseDto.getId()).get();
+    public UserResponseDto getUser(int id) {
+        UserEntity userEntity= userRespository.findById(id).get();
         UserResponseDto userResponse=UserConvertor.convertEntityToDto(userEntity);
         return userResponse;
     }

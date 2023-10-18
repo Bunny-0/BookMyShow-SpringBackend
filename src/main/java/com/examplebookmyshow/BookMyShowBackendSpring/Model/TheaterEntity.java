@@ -41,7 +41,7 @@ public class TheaterEntity {
     @Column(name = "city", nullable = false)
     private String city;
 
-    @Column(name = "address", nullable = false)
+    @Column(name = "address",nullable = false)
     private String address;
 
     @OneToMany(mappedBy = "theater", cascade = CascadeType.ALL)

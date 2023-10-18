@@ -11,10 +11,12 @@ import com.examplebookmyshow.BookMyShowBackendSpring.Repository.ShowSeatReposito
 import com.examplebookmyshow.BookMyShowBackendSpring.Repository.TheaterRepository;
 import com.examplebookmyshow.BookMyShowBackendSpring.Service.ShowService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class ShowServiceImpl implements ShowService {
     @Autowired
     ShowSeatRepository showSeatRepository;
@@ -28,13 +30,13 @@ public class ShowServiceImpl implements ShowService {
     @Override
     public ShowResponseDto addShow(ShowEntryDto showEntryDto) {
         ShowEntity showEntity= ShowConvertor.convertDtoToEntity(showEntryDto);
-        MovieEntity movie= movieRepository.findById(showEntity.getMovie().getId()).get();
-        TheaterEntity theater=theaterRepository.findById(showEntity.getTheater().getId()).get();
+        MovieEntity movie= movieRepository.findById(showEntryDto.getMovieResponseDto().getId()).get();
+        TheaterEntity theater=theaterRepository.findById(showEntryDto.getTheaterResponseDto().getId()).get();
         showEntity.setTheater(theater);
         showEntity.setMovie(movie);
+        showRepository.save(showEntity);
         List<ShowSeatsEntity> seats=generateShowSeats(theater.getSeats(),showEntity);
         showEntity.setSeats(seats);
-        showRepository.save(showEntity);
         ShowResponseDto showResponseDto= ShowConvertor.convertEntityToDto(showEntity,showEntryDto);
         return showResponseDto;
     }

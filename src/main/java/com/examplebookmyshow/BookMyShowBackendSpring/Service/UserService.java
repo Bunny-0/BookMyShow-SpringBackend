@@ -7,5 +7,5 @@ import com.examplebookmyshow.BookMyShowBackendSpring.Dto.ResponseDto.UserRespons
 public interface UserService {
 
     public UserResponseDto addUser(UserEntryDto userEntryDto);
-    public UserResponseDto getUser(UserResponseDto userResponseDto);
+    public UserResponseDto getUser(int id);
 }
